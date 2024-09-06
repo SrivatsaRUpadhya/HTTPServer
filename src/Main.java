@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,26 +18,28 @@ public class Main {
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 PrintWriter out = new PrintWriter(conn.getOutputStream());
 
-                HTTPRequest req;
+                HTTPRequest req = null;
                 ArrayList<String> inp = new ArrayList<>();
                 String input;
                 while ((input = in.readLine()) != null) {
                     inp.add(input);
-                    if(input.isBlank()) {
+                    if (input.isBlank()) {
                         req = new HTTPRequest(inp);
                         break;
                     }
                 }
 
                 // Generate and send response
-                String ResOk = "HTTP/1.1 200 Ok";
-                HTTPResponse res = new HTTPResponse(ResOk);
-                out.println(res.getRes());
+                HTTPResponse res = new HTTPResponse();
+                res.generateResponse(req);
+                System.out.println(res.getRes());
+                out.print(res.getRes());
+                out.println("");
                 out.flush();
+                conn.close();
             }
         } catch (IOException e) {
             System.out.println("Io Exception");
         }
-
     }
 }
