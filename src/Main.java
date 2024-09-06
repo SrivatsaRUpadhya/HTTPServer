@@ -19,31 +19,21 @@ public class Main {
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 PrintWriter out = new PrintWriter(conn.getOutputStream());
 
-                // Read input from the client and send it back as response
+                HTTPRequest req;
+                ArrayList<String> inp = new ArrayList<>();
                 String input;
-
-                String[] ReqComponents = in.readLine().split(" ");
-                String method = ReqComponents[0];
-                String path = ReqComponents[1];
-                String ver = ReqComponents[2];
-
-                ArrayList<String> ReqHeaders = new ArrayList<>();
                 while ((input = in.readLine()) != null) {
-                    ReqHeaders.add(input);
-                    if(input.isBlank()) break;
+                    inp.add(input);
+                    if(input.isBlank()) {
+                        req = new HTTPRequest(inp);
+                        break;
+                    }
                 }
 
                 // Generate and send response
                 String ResOk = "HTTP/1.1 200 Ok";
-                ArrayList<String> ResHeaders = new ArrayList<>();
-                String date = new Date().toString();
-
-                ResHeaders.add(date);
-                sb.append(ResOk).append('\n');
-                for(String h : ResHeaders)
-                    sb.append(h).append('\n');
-
-                out.println(sb.toString());
+                HTTPResponse res = new HTTPResponse(ResOk);
+                out.println(res.getRes());
                 out.flush();
             }
         } catch (IOException e) {
