@@ -72,6 +72,16 @@ public class HTTPResponse {
                     AppendResponseBody(notFound);
                 }
                 break;
+
+            case "POST":
+                // Just printing the body if any for now
+                for (String[] q : req.getQueryParams()) {
+                    System.out.println(q[0] + " : " + q[1]);
+                }
+                AppendStatusLine(ResponseStatusLines.ResOk);
+                AppendResponseHeaders();
+                break;
+
             default:
                 AppendStatusLine(ResponseStatusLines.ResNotImplemented);
                 AppendResponseHeaders();
